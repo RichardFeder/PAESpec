@@ -46,6 +46,22 @@ python scripts/redshift_job_mock_batched.py \
 Use `configs/public_mock_template.yaml` as a starting point. Required knobs such
 as `run_name` and `sources_per_task` can be set in YAML instead of on CLI.
 
+Minimal working YAML example:
+
+```yaml
+common:
+	filter_set: spherex_filters102/
+	sig_level_norm: 0.01
+
+training:
+	run_name: my_first_paespec_run
+
+redshift_mock:
+	run_name: my_first_paespec_run
+	sources_per_task: 1000
+	datestr: my_first_paespec_eval
+```
+
 If you are starting from scratch, use this flow:
 
 1. Copy `configs/public_mock_template.yaml` and edit it for your run.
@@ -58,6 +74,7 @@ If you are starting from scratch, use this flow:
 
 For details on what each section means, see `docs/PUBLIC_RELEASE_GUIDE.md`
 (especially "YAML-first usage" and "Required keys").
+For a broader parameter catalog, see `docs/CONFIG_REFERENCE.md`.
 
 ## Portable output paths
 
@@ -72,4 +89,5 @@ Defaults are local repo paths under `results/` and `figures/`.
 ## Docs
 
 - `docs/PUBLIC_RELEASE_GUIDE.md` for public workflow guidance
+- `docs/CONFIG_REFERENCE.md` for script arguments and tunable parameters
 - `configs/public_mock_template.yaml` for config schema template

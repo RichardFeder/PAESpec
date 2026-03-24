@@ -2,6 +2,9 @@
 
 This guide describes the supported public workflow for PAESpec.
 
+Related docs:
+- `docs/CONFIG_REFERENCE.md` for script arguments and tunable parameters
+
 ## Scope
 
 This public repo is code-first and does not ship large private/mock datasets.
