@@ -16,7 +16,6 @@ corner>=2.2
 
 # JAX stack
 jax>=0.4.28
-jaxlib>=0.4.28
 flax>=0.8.4
 optax>=0.2.2
 distrax>=0.1.5
@@ -30,4 +29,3 @@ paramax>=0.0.2
 
 # Config and utilities
 PyYAML>=6.0
-psutil>=5.9

@@ -3,7 +3,8 @@
 This guide describes the supported public workflow for PAESpec.
 
 Related docs:
-- `docs/CONFIG_REFERENCE.md` for script arguments and tunable parameters
+- `docs/CONFIG_REFERENCE.md` for the configuration reference hub
+- `docs/config/README.md` for split parameter-definition pages
 
 ## Scope
 
@@ -16,16 +17,18 @@ Use a separate environment for PAESpec. This is strongly recommended because
 JAX-related dependencies are often version-sensitive.
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+# Choose any environment directory name you like.
+ENV_NAME=.venv-paespec
+python -m venv "$ENV_NAME"
+source "$ENV_NAME/bin/activate"
 pip install -r requirements.txt
 ```
 
 At a high level, PAESpec depends on:
-- JAX/optimization libraries (`jax`, `jaxlib`, `flax`, `optax`, `blackjax`, `jaxopt`)
+- JAX/optimization libraries (`jax`, `flax`, `optax`, `blackjax`, `jaxopt`)
 - Flow/model libraries (`flowjax`, `equinox`, `distrax`, `paramax`)
 - Standard scientific Python packages (`numpy`, `scipy`, `pandas`, `astropy`, `matplotlib`)
-- Utility packages (`PyYAML`, `psutil`)
+- Utility packages (`PyYAML`)
 
 ## Main workflow scripts
 

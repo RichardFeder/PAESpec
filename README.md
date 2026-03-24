@@ -12,16 +12,18 @@ installing into your base environment. This avoids version conflicts with other
 JAX/ML projects.
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+# Choose any environment directory name you like.
+ENV_NAME=.venv-paespec
+python -m venv "$ENV_NAME"
+source "$ENV_NAME/bin/activate"
 pip install -r requirements.txt
 ```
 
 The main dependency groups are:
-- JAX ecosystem: `jax`, `jaxlib`, `flax`, `optax`, `blackjax`, `jaxopt`
+- JAX ecosystem: `jax`, `flax`, `optax`, `blackjax`, `jaxopt`
 - Flow and model tooling: `flowjax`, `equinox`, `distrax`, `paramax`
 - Scientific Python stack: `numpy`, `scipy`, `pandas`, `astropy`, `matplotlib`
-- Utilities: `PyYAML` (YAML config support), `psutil` (memory diagnostics)
+- Utilities: `PyYAML` (YAML config support)
 
 ## Main workflow scripts
 
@@ -74,7 +76,7 @@ If you are starting from scratch, use this flow:
 
 For details on what each section means, see `docs/PUBLIC_RELEASE_GUIDE.md`
 (especially "YAML-first usage" and "Required keys").
-For a broader parameter catalog, see `docs/CONFIG_REFERENCE.md`.
+For full parameter definitions, start at `docs/CONFIG_REFERENCE.md`.
 
 ## Portable output paths
 
@@ -89,5 +91,11 @@ Defaults are local repo paths under `results/` and `figures/`.
 ## Docs
 
 - `docs/PUBLIC_RELEASE_GUIDE.md` for public workflow guidance
-- `docs/CONFIG_REFERENCE.md` for script arguments and tunable parameters
+- `docs/CONFIG_REFERENCE.md` as the reference hub for all parameter definitions
+- `docs/config/README.md` index for split config docs
+- `docs/config/YAML_SCHEMA.md` for YAML sections and required keys
+- `docs/config/TRAINING_REFERENCE.md` for training arguments
+- `docs/config/INFERENCE_REFERENCE.md` for mock redshift arguments
+- `docs/config/PLOTTING_REFERENCE.md` for plotting and diagnostics arguments
+- `docs/config/ENVIRONMENT_REFERENCE.md` for shell/environment variables
 - `configs/public_mock_template.yaml` for config schema template

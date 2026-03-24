@@ -368,7 +368,7 @@ def instantiate_ae_modl_gen_jax(params, central_wavelengths):
                                  filter_sizes=params['filter_sizes'], n_hidden_encoder=params['n_hidden_encoder'], \
                                      filters=params['filters'], conv=params['conv_decoder'])
         
-    elif params['modl_type']=='mlp': # deprecated
+    elif params['modl_type']=='mlp':
         ae_modl = vae_modl(params['sizes'], ncode=params['nlatent'], beta=params['beta'], alpha=params['alpha'], lambd=params['lambd'])
 
     elif params['modl_type'] == 'specformer':

@@ -27,7 +27,7 @@ def convert_to_bfloat16_recursive(pytree):
         if isinstance(x, jnp.ndarray) and x.dtype == jnp.float32:
             return x.astype(jnp.bfloat16)
         return x
-    return jax.tree_map(to_bfloat16, pytree)
+    return jax.tree_util.tree_map(to_bfloat16, pytree)
 
 class PAE_JAX():
     
@@ -503,9 +503,6 @@ class PAE_JAX():
 
         
     def push_spec(self, latents, redshift, decoder_params=None):
-
-        ''' deprecated '''
-
         # latents = latents.astype(self.inference_dtype) # <--- Cast latents
         # Cast redshift if it's used in bfloat16 computations
         redshift = redshift.astype(self.inference_dtype) # <--- Cast redshift

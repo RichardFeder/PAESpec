@@ -39,16 +39,7 @@ from training.train_ae_jax import param_dict_gen
 from sampling.sample_pae_batch_refactor import MCLMCSamplingConfig, sample_mclmc_wrapper
 from data_proc.dataloader_jax import SPHERExData
 from config import scratch_basepath
-from utils.memory_utils import (
-    get_detailed_memory_info,
-    print_memory_status
-)
 from utils.config_loader import apply_yaml_defaults
-
-
-def get_memory_info():
-    """Get current memory usage (wrapper for compatibility)."""
-    return get_detailed_memory_info()
 
 
 def load_bpz_prior_from_json(json_path):
@@ -150,9 +141,6 @@ def process_batch_mock(
     print(f"PROCESSING BATCH {batch_idx}: sources {start_idx} to {end_idx}")
     print(f"{'='*70}")
     
-    # Memory check at batch start
-    print_memory_status("START", batch_idx)
-    
     batch_start_time = time.time()
     
     # Create source index array for this batch
@@ -168,7 +156,6 @@ def process_batch_mock(
     
     # Run MCLMC sampling on this batch
     t_sampling_start = time.time()
-    print_memory_status("Before sampling", batch_idx)
     
     try:
         results = sample_mclmc_wrapper(
@@ -186,13 +173,8 @@ def process_batch_mock(
             property_cat_df=property_cat_df
         )
         
-        print_memory_status("After sampling", batch_idx)
-        
         t_sampling = time.time() - t_sampling_start
         batch_time = time.time() - batch_start_time
-        
-        # Memory check at batch end
-        print_memory_status("END (before cleanup)", batch_idx)
         
         print(f"\n{'='*70}")
         print(f"BATCH {batch_idx} TIMING")
@@ -452,7 +434,6 @@ def main(args):
     print("LOADING MOCK DATA")
     print(f"{'='*70}")
     t_load_start = time.time()
-    print_memory_status("Before data load")
     
     dat_obs, property_cat_df_obs, property_cat_df_restframe, \
         central_wavelengths, wave_obs = load_spherex_data(
@@ -480,7 +461,6 @@ def main(args):
     t_load = time.time() - t_load_start
     print(f"✓ Data loaded in {t_load:.2f}s ({t_load/60:.2f} min)")
     print(f"  Total sources available: {len(spherex_dat.redshift)}")
-    print_memory_status("After data load")
     
     # Apply filters to select sources
     valid_mask = apply_filters(spherex_dat, property_cat_df_obs, args)
@@ -514,7 +494,6 @@ def main(args):
     
     t_model = time.time() - t_model_start
     print(f"✓ PAE model initialized in {t_model:.2f}s")
-    print_memory_status("After model init")
     
     # Process multiple tasks serially
     n_total_sources = len(valid_indices)

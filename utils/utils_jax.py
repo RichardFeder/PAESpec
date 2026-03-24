@@ -578,7 +578,6 @@ def param_dict_gen(modl_type, **kwargs):
         params['n_hidden_decoder'] = (16, 64, 256)
         params['filters'] = [32, 64, 128]
            
-    # largely deprecated now. beta-VAE
     if modl_type=='mlp_vae':
         params['sizes'] = [102, 70, 20]
         params['beta'] = 0.1
