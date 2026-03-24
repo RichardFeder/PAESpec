@@ -46,6 +46,19 @@ python scripts/redshift_job_mock_batched.py \
 Use `configs/public_mock_template.yaml` as a starting point. Required knobs such
 as `run_name` and `sources_per_task` can be set in YAML instead of on CLI.
 
+If you are starting from scratch, use this flow:
+
+1. Copy `configs/public_mock_template.yaml` and edit it for your run.
+2. Set required fields:
+	- `training.run_name`
+	- `redshift_mock.sources_per_task`
+	- `redshift_mock.run_name` (usually the same model run name as training)
+3. Optionally set `redshift_mock.datestr` to control output naming.
+4. Run the two commands above with your edited YAML file.
+
+For details on what each section means, see `docs/PUBLIC_RELEASE_GUIDE.md`
+(especially "YAML-first usage" and "Required keys").
+
 ## Portable output paths
 
 The shell wrapper `scripts/run_redshift_job_mock.sh` now supports configurable
