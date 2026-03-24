@@ -5,6 +5,14 @@
 
 set -e  # Exit on error
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+
+# Public-friendly, configurable output roots.
+RESULTS_BASE_DIR="${RESULTS_BASE_DIR:-${SPAE_RESULTS_BASE_DIR:-$REPO_ROOT/results/mock_runs}}"
+FIGURES_BASE_DIR="${FIGURES_BASE_DIR:-${SPAE_FIGURES_BASE_DIR:-$REPO_ROOT/figures/redshift_validation}}"
+
 # ============================================================
 # CONFIGURATION
 # ============================================================
@@ -116,7 +124,7 @@ write_timing_summary() {
         total_wall_sec=$((run_end_epoch - RUN_START_EPOCH))
 
         local base_results_dir run_results_dir timing_json timing_csv
-        base_results_dir="/pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched"
+        base_results_dir="$RESULTS_BASE_DIR"
         run_results_dir="${base_results_dir}/${DATESTR}"
         timing_json="${run_results_dir}/timing_summary_${DATESTR}.json"
         timing_csv="${base_results_dir}/timing_registry_mock.csv"
@@ -314,7 +322,7 @@ else
     #   --data-fpath "$OUTPUT_CATGRID" \
 
     # Save this script to the results directory for reproducibility
-    RESULTS_DIR="/pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched/$DATESTR"
+    RESULTS_DIR="$RESULTS_BASE_DIR/$DATESTR"
     if [ -d "$RESULTS_DIR" ]; then
         cp "$0" "$RESULTS_DIR/run_script.sh"
         echo "Saved run script to: $RESULTS_DIR/run_script.sh"
@@ -330,14 +338,14 @@ else
     echo ""
     echo "✓ Redshift estimation completed successfully!"
     echo ""
-    echo "Results saved to: /pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched/$DATESTR"
+    echo "Results saved to: $RESULTS_BASE_DIR/$DATESTR"
 
 fi  # End of SKIP_REDSHIFT_RUN check
 
 # ============================================================
 # COLLATE RESULTS (if enabled and multi-task run)
 # ============================================================
-COMBINED_FILE="/pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched/$DATESTR/PAE_results_combined_${DATESTR}.npz"
+COMBINED_FILE="$RESULTS_BASE_DIR/$DATESTR/PAE_results_combined_${DATESTR}.npz"
 
 if [ "$SKIP_REDSHIFT_RUN" = "false" ] && [ "$COLLATE_RESULTS" = "true" ]; then
     COLLATE_STATUS="running"
@@ -349,7 +357,7 @@ if [ "$SKIP_REDSHIFT_RUN" = "false" ] && [ "$COLLATE_RESULTS" = "true" ]; then
     echo "============================================================"
     
     # Count batch files before collation
-    RESULTS_DIR="/pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched/$DATESTR"
+    RESULTS_DIR="$RESULTS_BASE_DIR/$DATESTR"
     N_BATCH_FILES=$(find "$RESULTS_DIR" -name "PAE_results_batch*.npz" | wc -l)
     echo "Number of batch files to collate: $N_BATCH_FILES"
     
@@ -389,7 +397,7 @@ elif [ "$SKIP_REDSHIFT_RUN" = "true" ]; then
             fi
 
             # Count batch files before collation
-            RESULTS_DIR="/pscratch/sd/r/rmfeder/data/pae_sample_results/MCLMC/batched/$DATESTR"
+            RESULTS_DIR="$RESULTS_BASE_DIR/$DATESTR"
             N_BATCH_FILES=$(find "$RESULTS_DIR" -name "PAE_results_batch*.npz" | wc -l)
             echo "Number of batch files to collate: $N_BATCH_FILES"
 
@@ -471,7 +479,7 @@ if [ "$GENERATE_PLOTS" = "true" ]; then
     echo "============================================================"
     
     # Create output directory if it doesn't exist
-    FIGURE_DIR="/pscratch/sd/r/rmfeder/figures/redshift_validation/$DATESTR"
+    FIGURE_DIR="$FIGURES_BASE_DIR/$DATESTR"
     mkdir -p "$FIGURE_DIR"
     
     # Use --datestr for automatic file detection (generates mock-specific plots)
@@ -529,7 +537,7 @@ else
     echo ""
     echo "Plot generation skipped (GENERATE_PLOTS=$GENERATE_PLOTS)"
     echo "To generate plots later, run:"
-    echo "  python3 scripts/generate_mock_plots.py --datestr $DATESTR --output-dir /pscratch/sd/r/rmfeder/figures/redshift_validation/$DATESTR"
+    echo "  python3 scripts/generate_mock_plots.py --datestr $DATESTR --output-dir $FIGURES_BASE_DIR/$DATESTR"
 fi
 
 echo ""

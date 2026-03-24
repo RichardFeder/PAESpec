@@ -1,0 +1,45 @@
+# Public template for YAML-first CLI configuration.
+#
+# Sections:
+# - common: applied to all scripts that use --config-yaml
+# - training: applied by train_pae_autoencoder.py
+# - redshift_mock: applied by redshift_job_mock_batched.py
+
+common:
+  filter_set: spherex_filters102/
+  sig_level_norm: 0.01
+
+training:
+  # Required: run_name
+  run_name: example_train_run
+
+  # Typical knobs
+  nlatent: 10
+  batch_size: 512
+  learning_rate: 0.001
+  max_epoch: 1000
+  train_frac: 0.8
+
+  # Optional source caps for quick tests
+  max_sources: 50000
+
+redshift_mock:
+  # Required: sources_per_task
+  sources_per_task: 5000
+
+  # Required for selecting trained model assets
+  run_name: example_train_run
+
+  # Task and batching knobs
+  start_task: 0
+  max_tasks: 4
+  batch_size: 1000
+  sampling_batch_size: 1000
+
+  # Prior/sampling defaults
+  nf_alpha: 1.0
+  prior_type: 2
+  sample_log_redshift: true
+
+  # Optional outputs
+  datestr: example_public_run
