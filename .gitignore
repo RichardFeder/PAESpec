@@ -1,0 +1,16 @@
+# Jupyter Notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Documentation (optional - can commit later)
+*_SUMMARY.md
+*_PROPOSAL.md
+*_IMPLEMENTATION.md
+*_STATUS.md
+QUICK_START.md
+BATCH_PROCESSING_README.md
