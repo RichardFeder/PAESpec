@@ -9,13 +9,22 @@ You provide input data paths in your local environment.
 
 ## Installation
 
+Use a separate environment for PAESpec. This is strongly recommended because
+JAX-related dependencies are often version-sensitive.
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Canonical entrypoints
+At a high level, PAESpec depends on:
+- JAX/optimization libraries (`jax`, `jaxlib`, `flax`, `optax`, `blackjax`, `jaxopt`)
+- Flow/model libraries (`flowjax`, `equinox`, `distrax`, `paramax`)
+- Standard scientific Python packages (`numpy`, `scipy`, `pandas`, `astropy`, `matplotlib`)
+- Utility packages (`PyYAML`, `psutil`)
+
+## Main workflow scripts
 
 - `scripts/train_pae_autoencoder.py`
 - `scripts/redshift_job_mock_batched.py`
