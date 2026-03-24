@@ -31,6 +31,50 @@ The main dependency groups are:
 - `scripts/redshift_job_mock_batched.py`
 - `scripts/generate_redshift_plots.py`
 
+## Core command examples
+
+Train PAE model (YAML-driven):
+
+```bash
+python scripts/train_pae_autoencoder.py \
+	--config-yaml configs/public_mock_template.yaml
+```
+
+Run mock redshift evaluation:
+
+```bash
+python scripts/redshift_job_mock_batched.py \
+	--config-yaml configs/public_mock_template.yaml
+```
+
+Generate summary redshift plots:
+
+```bash
+python scripts/generate_redshift_plots.py \
+	--datestr my_first_paespec_eval \
+	--no-show
+```
+
+Collate per-batch outputs (if needed):
+
+```bash
+python scripts/collate_batched_results.py \
+	--datestr my_first_paespec_eval
+```
+
+## Core code entrypoints
+
+If you are reading or extending the code, these are the central call points:
+
+- `models/pae_jax.py`
+	- `initialize_PAE(...)`: main model setup used by redshift inference scripts
+- `sampling/sample_pae_batch_refactor.py`
+	- `sample_mclmc_wrapper(...)`: core MCLMC sampling wrapper
+- `training/train_ae_jax.py`
+	- `run_ae_sed_fit_jax(...)`: AE training loop
+- `models/flow_jax.py`
+	- `fit_flow_to_latents_jax(...)`: flow fitting used after AE latent extraction
+
 ## YAML-first configuration
 
 The training and mock-redshift scripts support `--config-yaml`.
