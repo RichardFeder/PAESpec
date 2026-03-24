@@ -6,6 +6,14 @@ mock-data experiments.
 This repository focuses on code and reproducible scripts. Large data products are
 not bundled and must be provided locally by users.
 
+## Installation
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Canonical entrypoints
 
 - `scripts/train_pae_autoencoder.py`

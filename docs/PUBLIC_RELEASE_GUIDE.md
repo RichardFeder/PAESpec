@@ -7,6 +7,14 @@ This guide describes the supported public workflow for PAESpec.
 This public repo is code-first and does not ship large private/mock datasets.
 You provide input data paths in your local environment.
 
+## Installation
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Canonical entrypoints
 
 - `scripts/train_pae_autoencoder.py`
