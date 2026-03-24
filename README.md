@@ -10,7 +10,7 @@ not bundled and must be provided locally by users.
 
 - `scripts/train_pae_autoencoder.py`
 - `scripts/redshift_job_mock_batched.py`
-- `scripts/generate_mock_plots.py`
+- `scripts/generate_redshift_plots.py`
 
 ## YAML-first configuration
 

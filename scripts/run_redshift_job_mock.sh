@@ -446,23 +446,9 @@ if [ "$REPROCESS_BURNIN" = "true" ]; then
     echo "============================================================"
     echo "REPROCESSING SAMPLES WITH REDUCED BURN-IN = $REPROCESS_BURNIN_VALUE"
     echo "============================================================"
-
-        set +e
-        python scripts/reprocess_with_burnin.py "$DATESTR" \
-            --burn-in "$REPROCESS_BURNIN_VALUE"
-        REPROCESS_EXIT_CODE=$?
-        set -e
-        PHASE_REPROCESS_SEC=$(( $(date +%s) - REPROCESS_PHASE_START ))
-    if [ $REPROCESS_EXIT_CODE -ne 0 ]; then
-        echo ""
-        echo "⚠ WARNING: Reprocessing failed with exit code $REPROCESS_EXIT_CODE"
-        echo "Continuing with existing combined file."
-                REPROCESS_STATUS="failed"
-    else
-        echo ""
-        echo "✓ Reprocessing complete. Combined file updated with burn_in=$REPROCESS_BURNIN_VALUE"
-                REPROCESS_STATUS="success"
-    fi
+    echo "⚠ Reprocessing helper script is not part of public release. Skipping."
+    PHASE_REPROCESS_SEC=$(( $(date +%s) - REPROCESS_PHASE_START ))
+    REPROCESS_STATUS="skipped"
 else
         REPROCESS_STATUS="skipped"
 fi
@@ -482,62 +468,58 @@ if [ "$GENERATE_PLOTS" = "true" ]; then
     FIGURE_DIR="$FIGURES_BASE_DIR/$DATESTR"
     mkdir -p "$FIGURE_DIR"
     
-    # Use --datestr for automatic file detection (generates mock-specific plots)
+        # Use --datestr for automatic file detection
         set +e
-        python3 scripts/generate_mock_plots.py --datestr "$DATESTR" \
-      --output-dir "$FIGURE_DIR" \
-      --uncertainty-histogram \
-      --chi2-comparison \
-      --raw-chi2-histogram \
-      --ztf-zpae-comparison \
-      --rhat-zscore-analysis \
-      --rhat-max 100 \
-      --chi2-max 2.0 \
-      --hexbin-comparison \
-      --hexbin-gridsize 50 \
-    --zerr-binned-corr \
-      --cross-selection \
-      --sigz-binned-plots \
-      --cross-selection-sigz-binned \
-      --cross-selection-sigz-ratio \
-      --cross-selection-sigz-fixed \
-      --cross-selection-sigz-bin-edges 0 0.03 0.1 0.2 \
-      --convergence-diagnostics
-    
-
-    PLOT_STATUS="success"
+        python3 scripts/generate_redshift_plots.py \
+            --datestr "$DATESTR" \
+            --output-dir "$FIGURE_DIR" \
+            --rhat_max 100 \
+            --chi2_max 2.0 \
+            --hexbin \
+            --no-show
+        PLOT_EXIT_CODE=$?
+        set -e
+        PHASE_PLOT_SEC=$(( $(date +%s) - PLOT_PHASE_START ))
+        if [ $PLOT_EXIT_CODE -ne 0 ]; then
+            echo ""
+            echo "⚠ WARNING: Plot generation failed with exit code $PLOT_EXIT_CODE"
+            PLOT_STATUS="failed"
+            ZIP_STATUS="skipped"
+        else
+            PLOT_STATUS="success"
     
     echo ""
     echo "✓ Plot generation completed successfully!"
     echo "Figures saved to: $FIGURE_DIR"
 
-    # Zip all figures for easy download/transfer
-    ZIP_STATUS="running"
-    ZIP_PHASE_START=$(date +%s)
-    ZIP_FILE="${FIGURE_DIR}/../${DATESTR}_figures.zip"
-    ZIP_FILE=$(realpath "$ZIP_FILE")
-    echo ""
-    echo "Creating figures zip: $ZIP_FILE"
-    set +e
-    zip -j "$ZIP_FILE" "$FIGURE_DIR"/*.png "$FIGURE_DIR"/*.pdf 2>/dev/null || \
-        zip -j "$ZIP_FILE" "$FIGURE_DIR"/*.png 2>/dev/null || \
-        zip -r "$ZIP_FILE" "$FIGURE_DIR"
-    ZIP_EXIT_CODE=$?
-    set -e
-    PHASE_ZIP_SEC=$(( $(date +%s) - ZIP_PHASE_START ))
-    if [ $ZIP_EXIT_CODE -eq 0 ]; then
-        ZIP_STATUS="success"
-    else
-        ZIP_STATUS="failed"
+      # Zip all figures for easy download/transfer
+      ZIP_STATUS="running"
+      ZIP_PHASE_START=$(date +%s)
+      ZIP_FILE="${FIGURE_DIR}/../${DATESTR}_figures.zip"
+      ZIP_FILE=$(realpath "$ZIP_FILE")
+      echo ""
+      echo "Creating figures zip: $ZIP_FILE"
+      set +e
+      zip -j "$ZIP_FILE" "$FIGURE_DIR"/*.png "$FIGURE_DIR"/*.pdf 2>/dev/null || \
+          zip -j "$ZIP_FILE" "$FIGURE_DIR"/*.png 2>/dev/null || \
+          zip -r "$ZIP_FILE" "$FIGURE_DIR"
+      ZIP_EXIT_CODE=$?
+      set -e
+      PHASE_ZIP_SEC=$(( $(date +%s) - ZIP_PHASE_START ))
+      if [ $ZIP_EXIT_CODE -eq 0 ]; then
+          ZIP_STATUS="success"
+      else
+          ZIP_STATUS="failed"
+      fi
+      echo "✓ Figures zipped to: $ZIP_FILE"
     fi
-    echo "✓ Figures zipped to: $ZIP_FILE"
 else
     PLOT_STATUS="skipped"
     ZIP_STATUS="skipped"
     echo ""
     echo "Plot generation skipped (GENERATE_PLOTS=$GENERATE_PLOTS)"
     echo "To generate plots later, run:"
-    echo "  python3 scripts/generate_mock_plots.py --datestr $DATESTR --output-dir $FIGURES_BASE_DIR/$DATESTR"
+    echo "  python3 scripts/generate_redshift_plots.py --datestr $DATESTR --output-dir $FIGURES_BASE_DIR/$DATESTR --no-show"
 fi
 
 echo ""

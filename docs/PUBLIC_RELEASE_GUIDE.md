@@ -11,7 +11,7 @@ You provide input data paths in your local environment.
 
 - `scripts/train_pae_autoencoder.py`
 - `scripts/redshift_job_mock_batched.py`
-- `scripts/generate_mock_plots.py`
+- `scripts/generate_redshift_plots.py`
 
 ## YAML-first usage
 

@@ -3,8 +3,6 @@ Diagnostics, convergence checks, and statistical analysis.
 
 This package contains:
 - diagnostics_jax: Convergence diagnostics, chi2, redshift statistics
-- pae_diagnostics: PAE-specific diagnostic functions
-- zpdf_compress: PDF compression and HPD calculations
 """
 
 from .diagnostics_jax import (
@@ -35,11 +33,6 @@ from .diagnostics_jax import (
     nf_result_fig_wrapper,
     compare_flow_to_latentz,
 )
-
-try:
-    from .pae_diagnostics import *
-except ImportError:
-    pass
 
 __all__ = [
     # Convergence and quality
